@@ -57,11 +57,12 @@ module JiraHelper
       "#{config.site}#{config.context}/browse/#{key}"
     end
 
-    def create_issue(project, subject, summary)
+    def create_issue(project, subject, summary, issue_type)
       project = fetch_project(project)
       return nil unless project
       issue = client.Issue.build
-      issue.save(fields: { subject: subject,
+      issue.save(fields: { issuetype: {name: issue_type},
+                           subject: subject,
                            summary: summary,
                            project: { id: project.id } })
       issue.fetch

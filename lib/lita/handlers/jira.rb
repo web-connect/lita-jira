@@ -58,7 +58,7 @@ module Lita
       )
 
       route(
-        /^todo\s#{PROJECT_PATTERN}\s#{SUBJECT_PATTERN}(\s#{SUMMARY_PATTERN})?$/,
+        /^todo\s#{PROJECT_PATTERN}\s{TYPE_PATTERN}\s#{SUBJECT_PATTERN}(\s#{SUMMARY_PATTERN})?$/,
         :todo,
         command: true,
         help: {
@@ -70,6 +70,7 @@ module Lita
       route AMBIENT_PATTERN, :ambient, command: false
 
       def summary(response)
+        response.reply('getting summary')
         issue = fetch_issue(response.match_data['issue'])
         return response.reply(t('error.request')) unless issue
         response.reply(t('issue.summary', key: issue.key, summary: issue.summary))
@@ -83,6 +84,7 @@ module Lita
 
       def comment(response)
         issue = fetch_issue(response.match_data['issue'])
+
         return response.reply(t('error.request')) unless issue
         comment = issue.comments.build
         comment.save!(body: response.match_data['comment'])
@@ -92,7 +94,8 @@ module Lita
       def todo(response)
         issue = create_issue(response.match_data['project'],
                              response.match_data['subject'],
-                             response.match_data['summary'])
+                             response.match_data['summary'],
+                             response.match_data['type'])
         return response.reply(t('error.request')) unless issue
         response.reply(t('issue.created', key: issue.key))
       end
