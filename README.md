@@ -72,3 +72,5 @@ jira whoami                   - Show your chat user / email association
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
+
+## Test
